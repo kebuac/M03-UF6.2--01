@@ -10,6 +10,6 @@ import java.util.ArrayList;
 public interface ClientDAO {
     public ArrayList<oracle.sql.STRUCT> showAllClients(Connection connection);
     public boolean addClient(oracle.sql.STRUCT client, Connection connection);
-    public boolean updateClientPhone(oracle.sql.STRUCT client, Connection connection);
-    public boolean updateClientDiscount(oracle.sql.STRUCT client, Connection connection);
+    public boolean updateClientPhone(String cif, Connection connection);
+    public boolean updateClientDiscount(String cif, float discountPercentage, Connection connection);
 }

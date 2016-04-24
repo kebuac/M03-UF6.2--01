@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import oracle.sql.STRUCT;
 
 /**
@@ -57,6 +55,12 @@ public class ClientDAOImplem implements ClientDAO {
         return clients;
     }
 
+    /**
+     * Method to add new client into Oracle database
+     * @param client Client to insert
+     * @param connection Database connection
+     * @return Successful or not
+     */
     @Override
     public boolean addClient(STRUCT client, Connection connection) {
         String insertQuery = "INSERT INTO clients_table VALUES (?)";
@@ -65,6 +69,7 @@ public class ClientDAOImplem implements ClientDAO {
             preparedStatement.setObject(1, client);
             
             if(preparedStatement.executeUpdate() != 1){
+                System.out.println("Error inserting client " +client);
                 return false;
             }
             
@@ -74,16 +79,30 @@ public class ClientDAOImplem implements ClientDAO {
             System.out.println("Error code: " +ex.getErrorCode());
         }
         
+        System.out.println("Client " +client+ "was inserted correctly!");
         return true;
     }
 
+    /**
+     * Method to update a client's phone
+     * @param cif Client's cif to filter phones
+     * @param connection Database connection
+     * @return Successful or not
+     */
     @Override
-    public boolean updateClientPhone(STRUCT client, Connection connection) {
+    public boolean updateClientPhone(String cif, Connection connection) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Method to update a client's discount
+     * @param cif Client's cif to filter phones
+     * @param discountPercentage Percentage of discount that's going to be applied
+     * @param connection Database connection
+     * @return Successful or not
+     */
     @Override
-    public boolean updateClientDiscount(STRUCT client, Connection connection) {
+    public boolean updateClientDiscount(String cif, float discountPercentage, Connection connection) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
