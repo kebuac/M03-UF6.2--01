@@ -141,6 +141,7 @@ public class ClientDAOImplem implements ClientDAO {
                 if (stmt.executeUpdate() != 1) {
                     System.out.println("Error adding new phone to client " + cif);
                 }
+                else{System.out.println("ACTION COMPLETED SUCCESFULLY");}
             } catch (SQLException es) {
                 System.out.println("Database error: " + es.getMessage());
                 System.out.println("Database state: " + es.getSQLState());
@@ -152,10 +153,11 @@ public class ClientDAOImplem implements ClientDAO {
             }
         } else {
 
-            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "clientes_table c SET c.phones=phones_nt(?) WHERE c.cif=?")) {
+            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "TABLE(SELECT PHONES FROM CLIENES_TABLE WHERE CIF=?) p SET VALUE(p) = ? WHERE p.phone_number= ?")) {
                 int i;
                 System.out.println("Client " + cif + " phone numbers");
                 Object[] phones = (Object[]) array.getArray();
+               
                 for (i = 0; i < array.length(); i++) {
                     oracle.sql.STRUCT struct = (oracle.sql.STRUCT) phones[i];
                     Object[] structAttributes = struct.getAttributes();
@@ -163,39 +165,36 @@ public class ClientDAOImplem implements ClientDAO {
                         System.out.println("Phone " + i + " number: " + structAttributes[0]);
                     }
                 }
+                
+                int opcion;
+                String input;
+                
+                do{
                 System.out.println("Que telefono quieres modificar?");
-                String input = stdin.readLine();
-                int opcion = Integer.parseInt(input);
+                input = stdin.readLine();
+                opcion = Integer.parseInt(input);
                 System.out.println("Introducte el nuevo telefono: ");
                 input = stdin.readLine();
-
-                oracle.sql.ARRAY newPhones = null;
-                for (int j = 0; j < array.length(); j++) {
-
-                    if (j == opcion) {
-                        oracle.sql.STRUCT structNew = (oracle.sql.STRUCT) phones[j];
-                        Object[] structAttributesNew = structNew.getAttributes();
-                        structAttributesNew[0] = input;
-                        //Seguramente en este punto pete 1 aviso
-                        newPhones.setObjArray(structAttributesNew);
-
-                    } else {
-
-                        newPhones.setObjArray(phones[j]);
-
-                    }
-
+                
                 }
-
-                stmt.setObject(1, newPhones);
-                stmt.setString(2, cif);
+                while(opcion!=1||opcion!=2||opcion!=3);
+                
+                oracle.sql.STRUCT structnew = inputPhone(input,connection);
+                oracle.sql.STRUCT structold = (oracle.sql.STRUCT) phones[opcion];
+                Object[] structAttributes = structold.getAttributes();
+                String phoneold = (String) structAttributes[0];
+                    
+               
+                stmt.setString(1, cif);
+    
+                stmt.setObject(2, structnew);
+                
+                stmt.setString(3, phoneold);
+              
                 if (stmt.executeUpdate() != 1) {
-
-                    System.out.println("Error updating phones");
-
-                } else {
-                    System.out.println("Congratulations updating phones");
+                    System.out.println("Error UPDATING new phone to client " + cif);
                 }
+                else{System.out.println("ACTION COMPLETED SUCCESFULLY");}
 
             } catch (SQLException es) {
                 System.out.println("Database error: " + es.getMessage());
@@ -228,8 +227,33 @@ public class ClientDAOImplem implements ClientDAO {
      */
     @Override
     public boolean updateClientDiscount(String cif, float discountPercentage, Connection connection) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "clientes_table c SET c.descuento = ? where c.cif = ?")) {
+       
 
+                stmt.setFloat(1, discountPercentage);
+    
+                stmt.setString(2, cif);
+                
+                if (stmt.executeUpdate() != 1) {
+                    System.out.println("Error updating discount to client " + cif);
+                    return false;
+ 
+                }
+                else{
+                    
+                System.out.println("ACTION COMPLETED SUCCESFULLY");
+                return true;
+                
+                }
+                
+            } catch (SQLException es) {
+                System.out.println("Database error: " + es.getMessage());
+                System.out.println("Database state: " + es.getSQLState());
+                System.out.println("Error code: " + es.getErrorCode());
+                return false;
+
+            } 
+    
     }
-
 }
