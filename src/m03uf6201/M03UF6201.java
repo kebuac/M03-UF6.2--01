@@ -215,7 +215,7 @@ public class M03UF6201 {
 
             } catch (IOException ex) {
 
-                System.out.println("Error al leer los datos");
+                System.out.println(ex+"Error al leer los datos");
             }
 
         } while (validacion = false && flo > flocompro);
