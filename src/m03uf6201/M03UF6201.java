@@ -32,13 +32,13 @@ public class M03UF6201 {
             int opcion;
 
             do {
-
+                //MENU
                 System.out.println("1.- See all clients." + 
                         "\n2.- Insert new clients." + 
                         "\n3.- Update a client's phone." + 
                         "\n4.- Update a client's discount." + 
                         "\n5.- Exit.\n");
-                String input = scan.nextLine();
+                String input = scan.next();
                 opcion = Integer.parseInt(input);
 
                 switch (opcion) {
@@ -69,18 +69,25 @@ public class M03UF6201 {
                         break;
                     case 3:
                         System.out.println("Type a client's CIF: ");
-                        String cif = scan.nextLine();
+                        String cif = scan.next();
 
                         clientDaoImplem.updateClientPhone(input, con);
                         break;
                     case 4:
                         System.out.println("Type a client's CIF: ");
-                        String updateCif = scan.nextLine();
+                        String updateCif = scan.next();
                         
                         System.out.println("Type a new discount to apply: ");
-                        float discount = scan.nextFloat();
+                        BigDecimal discount = scan.nextBigDecimal();
                         
-                        clientDaoImplem.updateClientDiscount(updateCif, discount, con);
+                        boolean update = clientDaoImplem.updateClientDiscount(updateCif, discount, con);
+                        
+                        if(update){
+                            System.out.println("New discount applied to client " + updateCif + " correctly!");
+                        }else{
+                            System.out.println("Error updating discount of client with CIF " + updateCif);
+                        }
+                        
                         break;
                     case 5:
                         System.out.println("Thank you. See you soon.");
@@ -103,33 +110,33 @@ public class M03UF6201 {
 
     private static oracle.sql.STRUCT inputClient(Scanner scan, Connection con) throws IOException, SQLException {
         String cif, name, surname, street, town, postalcode, province;
-        float discount;
-        String[] phones = new String[14];
-        String objectName = "client_t";
+        BigDecimal discount;
+        String[] phones = new String[3];
+        String objectName = "CLIENTS_TABLE";
 
         System.out.println("Type a new client's CIF: ");
-        cif = scan.nextLine();
+        cif = scan.next();
         
         System.out.println("Type a new client's name: ");
-        name = scan.nextLine();
+        name = scan.next();
         
         System.out.println("Type a new client's surname: ");
-        surname = scan.nextLine();
+        surname = scan.next();
         
         System.out.println("Type a new client's street: ");
-        street = scan.nextLine();
+        street = scan.next();
         
         System.out.println("Type a new client's town: ");
-        town = scan.nextLine();
+        town = scan.next();
         
         System.out.println("Type a new client's postal code: ");
-        postalcode = scan.nextLine();
+        postalcode = scan.next();
         
         System.out.println("Type a new client's province: ");
-        province = scan.nextLine();
+        province = scan.next();
         
         System.out.println("Type a new client's discount: ");
-        discount = scan.nextFloat();
+        discount = scan.nextBigDecimal();
 
         System.out.println("How many phones you want to enter? 1, 2 or 3");
         int input = scan.nextInt();

@@ -3,6 +3,7 @@ package dao;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -77,8 +78,14 @@ public class ClientDAOImplem implements ClientDAO {
         return true;
     }
 
+    /**
+     * Method to list phones of a client by his CIF
+     * @param cif Client's CIF
+     * @param connection Connection to database
+     * @return Array with phones of an specific client
+     */
     @Override
-    public ARRAY list(String cif, Connection connection) {
+    public ARRAY listPhones(String cif, Connection connection) {
         oracle.sql.ARRAY phones = null;
 
         try (PreparedStatement stmt = connection.prepareStatement("SELECT c.phones" + "FROM clientes_table c WHERE c.cif=?")) {
@@ -105,12 +112,11 @@ public class ClientDAOImplem implements ClientDAO {
      *
      * @param cif Client's cif to filter phones
      * @param connection Database connection
-     * @return Successful or not
      */
     @Override
     public void updateClientPhone(String cif, Connection connection) {
 
-        oracle.sql.ARRAY array = this.list(cif, connection);
+        oracle.sql.ARRAY array = this.listPhones(cif, connection);
         BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 
         if (array == null) {
@@ -191,6 +197,13 @@ public class ClientDAOImplem implements ClientDAO {
 
     }
 
+    /**
+     * Method to add new phone to client
+     * @param number Phone's number
+     * @param connection Database connection
+     * @return New phone's number to insert
+     * @throws SQLException 
+     */
     private static oracle.sql.STRUCT inputPhone(String number, Connection connection) throws SQLException {
 
         StructDescriptor structDescriptor = StructDescriptor.createDescriptor("phone_t", connection);
@@ -203,41 +216,33 @@ public class ClientDAOImplem implements ClientDAO {
     /**
      * Method to update a client's discount
      *
-     * @param cif Client's cif to filter phones
+     * @param cif Client's cif to filter
      * @param discountPercentage Percentage of discount that's going to be
      * applied
      * @param connection Database connection
-     * @return Successful or not
+     * @return Update successful or not
      */
     @Override
-    public boolean updateClientDiscount(String cif, float discountPercentage, Connection connection) {
-        
-try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "clientes_table c SET c.descuento = ? where c.cif = ?")) {
-       
+    public boolean updateClientDiscount(String cif, BigDecimal discountPercentage, Connection connection) {
+        try (PreparedStatement stmt = connection.prepareStatement("UPDATE clients_table c SET c.discount = ? where c.cif = ?")) {
 
-                stmt.setFloat(1, discountPercentage);
-    
-                stmt.setString(2, cif);
-                
-                if (stmt.executeUpdate() != 1) {
-                    System.out.println("Error updating discount to client " + cif);
-                    return false;
- 
-                }
-                else{
-                    
-                System.out.println("ACTION COMPLETED SUCCESFULLY");
-                return true;
-                
-                }
-                
-            } catch (SQLException es) {
-                System.out.println("Database error: " + es.getMessage());
-                System.out.println("Database state: " + es.getSQLState());
-                System.out.println("Error code: " + es.getErrorCode());
+            stmt.setBigDecimal(1, discountPercentage);
+
+            stmt.setString(2, cif);
+
+            if (stmt.executeUpdate() != 1) {
                 return false;
 
-            } 
-    
+            }else {
+                return true;
+            }
+
+        } catch (SQLException es) {
+            System.out.println("Database error: " + es.getMessage());
+            System.out.println("Database state: " + es.getSQLState());
+            System.out.println("Error code: " + es.getErrorCode());
+            return false;
+        }
+
     }
 }

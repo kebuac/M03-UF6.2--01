@@ -1,5 +1,6 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.ArrayList;
 
@@ -11,6 +12,6 @@ public interface ClientDAO {
     public ArrayList<oracle.sql.STRUCT> showAllClients(Connection connection);
     public boolean addClient(oracle.sql.STRUCT client, Connection connection);
     public void updateClientPhone(String cif, Connection connection);
-    public boolean updateClientDiscount(String cif, float discountPercentage, Connection connection);
-    public oracle.sql.ARRAY list (String cif, Connection connection);
+    public boolean updateClientDiscount(String cif, BigDecimal discountPercentage, Connection connection);
+    public oracle.sql.ARRAY listPhones (String cif, Connection connection);
 }
