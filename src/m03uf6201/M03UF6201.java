@@ -152,7 +152,7 @@ public class M03UF6201 {
             phones[0] = null;
 
         }
-        
+
         StructDescriptor structDescriptor = StructDescriptor.createDescriptor(objectName, con);
         Object[] attributes = new Object[]{cif, name, surnames, street, town, postalcode, province, discount, phones};
         oracle.sql.STRUCT object = new oracle.sql.STRUCT(structDescriptor, con, attributes);
@@ -215,7 +215,7 @@ public class M03UF6201 {
 
             } catch (IOException ex) {
 
-                System.out.println(ex+"Error al leer los datos");
+                System.out.println(ex + "Error al leer los datos");
             }
 
         } while (validacion = false && flo > flocompro);
