@@ -2,23 +2,24 @@ package m03uf6201;
 
 import dao.ClientDAOFactory;
 import dao.ClientDAOImplem;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.Scanner;
+import oracle.sql.STRUCT;
 import oracle.sql.StructDescriptor;
 import singleton.DatabaseConnection;
 
 public class M03UF6201 {
 
+    private static Scanner scan = new Scanner(System.in);
+    
     public static void main(String[] args) {
 
         oracle.sql.STRUCT client;
-        String cif, aux;
-        Float discount;
+        ArrayList<oracle.sql.STRUCT> clients;
 
         try {
 
@@ -30,8 +31,6 @@ public class M03UF6201 {
 
             int opcion;
 
-            BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
             do {
 
                 System.out.println("1.- See all clients." + 
@@ -39,42 +38,54 @@ public class M03UF6201 {
                         "\n3.- Update a client's phone." + 
                         "\n4.- Update a client's discount." + 
                         "\n5.- Exit.\n");
-                String input = stdin.readLine();
+                String input = scan.nextLine();
                 opcion = Integer.parseInt(input);
 
                 switch (opcion) {
                     case 1:
-                        clientDaoImplem.showAllClients(con);
-                        break;
+                        clients = clientDaoImplem.showAllClients(con);
+                        
+                        if(clients.size() > 0){
+                            for (STRUCT clientToShow : clients) {
+                            Object[] clientsValues = clientToShow.getAttributes();
+                            String cif = (String) clientsValues[0];
+                            String name = (String) clientsValues[1];
+                            String surname = (String) clientsValues[2];
+                            BigDecimal discount = (BigDecimal) clientsValues[7];
 
+                            System.out.println("Client: " + name +"\n"
+                                    + "CIF: " + cif + "\n"
+                                    + "Surname: " + surname + "\n"
+                                    + "Discount: " + discount + "\n");
+                            }
+                        }else{
+                            System.out.println("There is no clients on database!");
+                        }
+                        
+                        break;
                     case 2:
-                        client = inputClient(stdin, con);
+                        client = inputClient(scan, con);
                         clientDaoImplem.addClient(client, con);
                         break;
                     case 3:
                         System.out.println("Type a client's CIF: ");
-                        cif = validarString(stdin);
+                        String cif = scan.nextLine();
 
                         clientDaoImplem.updateClientPhone(input, con);
                         break;
                     case 4:
                         System.out.println("Type a client's CIF: ");
-                        cif = validarString(stdin);
+                        String updateCif = scan.nextLine();
+                        
                         System.out.println("Type a new discount to apply: ");
-                        aux = stdin.readLine();
-                        discount = validarFloat(stdin);
-                        clientDaoImplem.updateClientDiscount(cif, discount, con);
-
+                        float discount = scan.nextFloat();
+                        
+                        clientDaoImplem.updateClientDiscount(updateCif, discount, con);
                         break;
                     case 5:
                         System.out.println("Thank you. See you soon.");
-                        try {
-                            stdin.close();
-                        }catch (IOException ex) {
-                            System.out.println("I/O error: " + ex);
-                        }
-
-
+                        
+                        scan.close();
                         break;
                 }
 
@@ -83,52 +94,53 @@ public class M03UF6201 {
         } catch (IOException ex) {
             System.out.println("Error" + ex);
         } catch (SQLException ex) {
-            Logger.getLogger(M03UF6201.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Database error: " + ex.getMessage());
+            System.out.println("Database state: " + ex.getSQLState());
+            System.out.println("Error code: " + ex.getErrorCode());
         }
 
     }
 
-    private static oracle.sql.STRUCT inputClient(BufferedReader stdin, Connection con) throws IOException, SQLException {
+    private static oracle.sql.STRUCT inputClient(Scanner scan, Connection con) throws IOException, SQLException {
         String cif, name, surname, street, town, postalcode, province;
-        Float discount;
-        String[] phones = new String[0];
+        float discount;
+        String[] phones = new String[14];
         String objectName = "client_t";
 
         System.out.println("Type a new client's CIF: ");
-        cif = validarString(stdin);
+        cif = scan.nextLine();
         
         System.out.println("Type a new client's name: ");
-        name = validarString(stdin);
+        name = scan.nextLine();
         
         System.out.println("Type a new client's surname: ");
-        surname = validarString(stdin);
+        surname = scan.nextLine();
         
         System.out.println("Type a new client's street: ");
-        street = validarString(stdin);
+        street = scan.nextLine();
         
         System.out.println("Type a new client's town: ");
-        town = validarString(stdin);
+        town = scan.nextLine();
         
         System.out.println("Type a new client's postal code: ");
-        postalcode = validarString(stdin);
+        postalcode = scan.nextLine();
         
         System.out.println("Type a new client's province: ");
-        province = validarString(stdin);
+        province = scan.nextLine();
         
         System.out.println("Type a new client's discount: ");
-        discount = validarFloat(stdin);
+        discount = scan.nextFloat();
 
         System.out.println("How many phones you want to enter? 1, 2 or 3");
-        String input = stdin.readLine();
+        int input = scan.nextInt();
 
-        int auxNums = Integer.parseInt(input);
+        int auxNums = input;
 
         if (auxNums == 1 || auxNums == 2 || auxNums == 3) {
 
             for (int i = 0; i < auxNums; i++) {
                 System.out.println("Type a new client's phone: ");
-
-                String aux = "" + validarInt(stdin);
+                String aux = scan.next();
 
                 phones[i] = aux;
             }
@@ -145,7 +157,7 @@ public class M03UF6201 {
         
         return object;
     }
-
+    /*
     public static String validarString(BufferedReader stdin) {
 
         boolean validacion = false;
@@ -241,6 +253,6 @@ public class M03UF6201 {
 
         return inte;
 
-    }
+    }*/
 
 }

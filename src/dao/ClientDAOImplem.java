@@ -39,20 +39,6 @@ public class ClientDAOImplem implements ClientDAO {
                 clients.add((STRUCT) resultSet.getObject(1));
             }
 
-            for (STRUCT client : clients) {
-                Object[] clientsValues = client.getAttributes();
-                String cif = (String) clientsValues[0];
-                String name = (String) clientsValues[1];
-                String surname = (String) clientsValues[2];
-                float discount = (float) clientsValues[7];
-
-                System.out.println("Client: \n"
-                        + "CIF: " + cif + "\n"
-                        + "Name:`" + name + "\n"
-                        + "Surname: " + surname + "\n"
-                        + "Discount: " + discount);
-            }
-
         } catch (SQLException ex) {
             System.out.println("Database error: " + ex.getMessage());
             System.out.println("Database state: " + ex.getSQLState());
@@ -71,7 +57,7 @@ public class ClientDAOImplem implements ClientDAO {
      */
     @Override
     public boolean addClient(STRUCT client, Connection connection) {
-        String insertQuery = "INSERT INTO clientes_table VALUES (?)";
+        String insertQuery = "INSERT INTO clients_table VALUES (?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
             preparedStatement.setObject(1, client);
