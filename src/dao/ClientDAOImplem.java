@@ -12,7 +12,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import oracle.sql.ARRAY;
 import oracle.sql.STRUCT;
-import oracle.sql.StructDescriptor;
 
 /**
  * Public class that implements methods from ClientDAO
@@ -64,7 +63,7 @@ public class ClientDAOImplem implements ClientDAO {
             preparedStatement.setObject(1, client);
 
             if (preparedStatement.executeUpdate() != 1) {
-                System.out.println("Error inserting client " + client);
+                System.out.println("Error inserting client");
                 return false;
             }
 
@@ -148,7 +147,7 @@ public class ClientDAOImplem implements ClientDAO {
             }
         } else {
 
-            try (PreparedStatement stmt = connection.prepareStatement("UPDATE TABLE(SELECT PHONES FROM CLIENTS_TABLE WHERE CIF=?) p SET VALUE(p) = ? WHERE VALUE(P) = ?")) {
+            try (PreparedStatement stmt = connection.prepareStatement("UPDATE TABLE(SELECT PHONES FROM CLIENTS_TABLE WHERE CIF=?) p SET VALUE(p) = ? WHERE VALUE(p) = ?")) {
                 int i;
                 System.out.println("Client " + cif + " phone numbers");
                 Object[] phones = (Object[]) array.getArray();
@@ -185,9 +184,9 @@ public class ClientDAOImplem implements ClientDAO {
                 stmt.setString(3, inputOldNumber);
 
                 if (stmt.executeUpdate() != 1) {
-                    System.out.println("Error UPDATING new phone to client " + cif);
+                    System.out.println("Error updating new phone of client with CIF " + cif);
                 } else {
-                    System.out.println("ACTION COMPLETED SUCCESFULLY");
+                    System.out.println("Phone " +inputOldNumber+ " updated to " +input+ " correctly!");
                 }
 
             } catch (SQLException es) {
@@ -201,23 +200,6 @@ public class ClientDAOImplem implements ClientDAO {
 
     }
 
-    /**
-     * Method to add new phone to client
-     *
-     * @param number Phone's number
-     * @param connection Database connection
-     * @return New phone's number to insert
-     * @throws SQLException
-     */
-    /*   private static oracle.sql.STRUCT inputPhone(String number, Connection connection) throws SQLException {
-
-        StructDescriptor structDescriptor = StructDescriptor.createDescriptor("phone_t", connection);
-
-        Object[] attributes = new Object[]{number};
-        oracle.sql.STRUCT object = new oracle.sql.STRUCT(structDescriptor, connection, attributes);
-        return object;
-    }
-     */
     /**
      * Method to update a client's discount
      *

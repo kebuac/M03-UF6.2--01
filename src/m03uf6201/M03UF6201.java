@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import oracle.sql.STRUCT;
 import oracle.sql.StructDescriptor;
 import singleton.DatabaseConnection;
@@ -20,15 +22,16 @@ public class M03UF6201 {
 
         oracle.sql.STRUCT client;
         ArrayList<oracle.sql.STRUCT> clients;
-
+        Connection con = null;
+        
         try {
 
             ClientDAOFactory daofactory = new ClientDAOFactory();
 
             ClientDAOImplem clientDaoImplem = daofactory.createClientDAO();
 
-            Connection con = DatabaseConnection.getInstance();
-
+            con = DatabaseConnection.getInstance();
+            
             int opcion;
 
             do {
@@ -91,8 +94,14 @@ public class M03UF6201 {
                         break;
                     case 5:
                         System.out.println("Thank you. See you soon.");
-
-                        scan.close();
+                        try{
+                            con.close();
+                            scan.close();   
+                        }catch(SQLException ex){
+                            System.out.println("Database error: " + ex.getMessage());
+                            System.out.println("Database state: " + ex.getSQLState());
+                            System.out.println("Error code: " + ex.getErrorCode());
+                        }
                         break;
                 }
 
@@ -104,6 +113,15 @@ public class M03UF6201 {
             System.out.println("Database error: " + ex.getMessage());
             System.out.println("Database state: " + ex.getSQLState());
             System.out.println("Error code: " + ex.getErrorCode());
+        } finally {
+            try {
+                scan.close();  
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Database error: " + ex.getMessage());
+                System.out.println("Database state: " + ex.getSQLState());
+                System.out.println("Error code: " + ex.getErrorCode());
+            }
         }
 
     }
@@ -168,102 +186,4 @@ public class M03UF6201 {
 
         return object;
     }
-    /*
-    public static String validarString(BufferedReader stdin) {
-
-        boolean validacion = false;
-        String input = null;
-        do {
-
-            try {
-
-                input = stdin.readLine();
-
-                if (input.matches("[a-z]*")) {
-
-                    validacion = true;
-                } else {
-
-                    System.out.println("Argumento no valido, introduza el dato nuevamente");
-                }
-
-            } catch (IOException ex) {
-
-                System.out.println("Error al leer los datos");
-            }
-
-        } while (validacion = false);
-
-        return input;
-
-    }
-
-    public static float validarFloat(BufferedReader stdin) {
-
-        boolean validacion = false;
-        String input = null;
-        float flo = 0;
-        float flocompro = (float) - 0.000001;
-        do {
-
-            try {
-
-                input = stdin.readLine();
-
-                if (input.matches("[0-9]*")) {
-
-                    flo = Float.parseFloat(input);
-                    validacion = true;
-                } else if (input.matches("[0-9]+.[0-9]*")) {
-
-                    flo = Float.parseFloat(input);
-                    validacion = true;
-                } else {
-
-                    System.out.println("Argumento no valido, introduza el dato nuevamente");
-                }
-
-            } catch (IOException ex) {
-
-                System.out.println(ex + "Error al leer los datos");
-            }
-
-        } while (validacion = false && flo > flocompro);
-
-        return flo;
-
-    }
-
-    public static int validarInt(BufferedReader stdin) {
-
-        boolean validacion = false;
-        String input = null;
-        int inte = 0;
-        int flocompro = (int) -0.000001;
-        do {
-
-            try {
-
-                input = stdin.readLine();
-
-                if (input.matches("[0-9]*")) {
-
-                    inte = Integer.parseInt(input);
-                    validacion = true;
-                } else {
-
-                    System.out.println("Argumento no valido, introduza el dato nuevamente");
-                }
-
-            } catch (IOException ex) {
-
-                System.out.println(ex + " Error al leer los datos");
-            }
-
-        } while (validacion = false && inte > flocompro);
-
-        return inte;
-
-    }*/
-
 }
