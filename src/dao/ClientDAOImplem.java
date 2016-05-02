@@ -88,7 +88,7 @@ public class ClientDAOImplem implements ClientDAO {
     public ARRAY listPhones(String cif, Connection connection) {
         oracle.sql.ARRAY phones = null;
 
-        try (PreparedStatement stmt = connection.prepareStatement("SELECT c.phones" + "FROM clientes_table c WHERE c.cif=?")) {
+        try (PreparedStatement stmt = connection.prepareStatement("SELECT c.phones" + "FROM clients_table c WHERE c.cif=?")) {
             stmt.setString(1, cif);
             ResultSet rs = stmt.executeQuery();
 
