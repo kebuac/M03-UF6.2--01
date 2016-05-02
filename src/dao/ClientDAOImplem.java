@@ -148,7 +148,7 @@ public class ClientDAOImplem implements ClientDAO {
             }
         } else {
 
-            try (PreparedStatement stmt = connection.prepareStatement("UPDATE TABLE(SELECT PHONES FROM CLIENTS_TABLE WHERE CIF=?) p SET VALUE(p) = ? WHERE VALUE(P) = ?")) {
+            try (PreparedStatement stmt = connection.prepareStatement("UPDATE TABLE(SELECT PHONES FROM CLIENTS_TABLE WHERE CIF=?) p SET VALUE(p) =? WHERE VALUE(p) =?")) {
                 int i;
                 System.out.println("Client " + cif + " phone numbers");
                 Object[] phones = (Object[]) array.getArray();
