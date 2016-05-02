@@ -80,6 +80,7 @@ public class ClientDAOImplem implements ClientDAO {
 
     /**
      * Method to list phones of a client by his CIF
+     *
      * @param cif Client's CIF
      * @param connection Connection to database
      * @return Array with phones of an specific client
@@ -90,8 +91,7 @@ public class ClientDAOImplem implements ClientDAO {
 
         String query = "SELECT c.phones FROM clients_table c WHERE c.cif=?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            
-            
+
             stmt.setString(1, cif);
             ResultSet rs = stmt.executeQuery();
 
@@ -126,9 +126,7 @@ public class ClientDAOImplem implements ClientDAO {
             System.out.println("No phones found for client " + cif + ". Please add new phone below: ");
 
             try (PreparedStatement stmt = connection.prepareStatement("UPDATE clients_table c SET c.phones=phones_t(?) WHERE c.cif=?")) {
-                
-                
-                
+
                 String numberNewPhone = stdin.readLine();
 
                 stmt.setString(1, numberNewPhone);
@@ -136,8 +134,9 @@ public class ClientDAOImplem implements ClientDAO {
 
                 if (stmt.executeUpdate() != 1) {
                     System.out.println("Error adding new phone to client " + cif);
+                } else {
+                    System.out.println("ACTION COMPLETED SUCCESFULLY");
                 }
-                else{System.out.println("ACTION COMPLETED SUCCESFULLY");}
             } catch (SQLException es) {
                 System.out.println("Database error: " + es.getMessage());
                 System.out.println("Database state: " + es.getSQLState());
@@ -149,43 +148,36 @@ public class ClientDAOImplem implements ClientDAO {
             }
         } else {
 
-            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "TABLE(SELECT PHONES FROM CLIENTS_TABLE WHERE CIF=?) p SET VALUE(p) = ? WHERE p.phone_number = phones_t(?)")) {
+            try (PreparedStatement stmt = connection.prepareStatement("UPDATE TABLE(SELECT PHONES FROM CLIENTS_TABLE WHERE CIF=?) p SET VALUE(p) = ? WHERE p.phone_number = phones_t(?)")) {
                 int i;
                 System.out.println("Client " + cif + " phone numbers");
                 Object[] phones = (Object[]) array.getArray();
-               
+
                 for (i = 0; i < array.length(); i++) {
-                     
-                
-                 
-                        System.out.println("Phone " + i + " number: " + phones[i]);
-                    
+
+                    System.out.println("Phone " + i + " number: " + phones[i]);
+
                 }
-                
-               
-                String input,inputOldNumber;
-                
-                
+
+                String input, inputOldNumber;
+
                 System.out.println("What phone you want to modify?");
                 inputOldNumber = stdin.readLine();
-                
-                
+
                 System.out.println("Insert new phone below: ");
                 input = stdin.readLine();
-                
-                
-                
-           
+
                 stmt.setString(1, cif);
-    
+
                 stmt.setObject(2, input);
-                
+
                 stmt.setString(3, inputOldNumber);
-              
+
                 if (stmt.executeUpdate() != 1) {
                     System.out.println("Error UPDATING new phone to client " + cif);
+                } else {
+                    System.out.println("ACTION COMPLETED SUCCESFULLY");
                 }
-                else{System.out.println("ACTION COMPLETED SUCCESFULLY");}
 
             } catch (SQLException es) {
                 System.out.println("Database error: " + es.getMessage());
@@ -200,12 +192,13 @@ public class ClientDAOImplem implements ClientDAO {
 
     /**
      * Method to add new phone to client
+     *
      * @param number Phone's number
      * @param connection Database connection
      * @return New phone's number to insert
-     * @throws SQLException 
+     * @throws SQLException
      */
- /*   private static oracle.sql.STRUCT inputPhone(String number, Connection connection) throws SQLException {
+    /*   private static oracle.sql.STRUCT inputPhone(String number, Connection connection) throws SQLException {
 
         StructDescriptor structDescriptor = StructDescriptor.createDescriptor("phone_t", connection);
 
@@ -213,8 +206,7 @@ public class ClientDAOImplem implements ClientDAO {
         oracle.sql.STRUCT object = new oracle.sql.STRUCT(structDescriptor, connection, attributes);
         return object;
     }
-    */
-
+     */
     /**
      * Method to update a client's discount
      *
@@ -224,7 +216,6 @@ public class ClientDAOImplem implements ClientDAO {
      * @param connection Database connection
      * @return Update successful or not
      */
-    
     @Override
     public boolean updateClientDiscount(String cif, BigDecimal discountPercentage, Connection connection) {
         try (PreparedStatement stmt = connection.prepareStatement("UPDATE clients_table c SET c.discount = ? where c.cif = ?")) {
@@ -236,7 +227,7 @@ public class ClientDAOImplem implements ClientDAO {
             if (stmt.executeUpdate() != 1) {
                 return false;
 
-            }else {
+            } else {
                 return true;
             }
 
