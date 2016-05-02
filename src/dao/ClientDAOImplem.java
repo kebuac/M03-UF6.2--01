@@ -126,9 +126,9 @@ public class ClientDAOImplem implements ClientDAO {
                 
                 
                 
-                String number = stdin.readLine();
+                String numberNewPhone = stdin.readLine();
 
-              //  stmt.setString(1, inputPhone(number, connection));
+                stmt.setString(1, numberNewPhone);
                 stmt.setString(2, cif);
 
                 if (stmt.executeUpdate() != 1) {
@@ -207,7 +207,7 @@ public class ClientDAOImplem implements ClientDAO {
      * @return New phone's number to insert
      * @throws SQLException 
      */
-    private static oracle.sql.STRUCT inputPhone(String number, Connection connection) throws SQLException {
+ /*   private static oracle.sql.STRUCT inputPhone(String number, Connection connection) throws SQLException {
 
         StructDescriptor structDescriptor = StructDescriptor.createDescriptor("phone_t", connection);
 
@@ -215,6 +215,7 @@ public class ClientDAOImplem implements ClientDAO {
         oracle.sql.STRUCT object = new oracle.sql.STRUCT(structDescriptor, connection, attributes);
         return object;
     }
+    */
 
     /**
      * Method to update a client's discount
@@ -225,6 +226,7 @@ public class ClientDAOImplem implements ClientDAO {
      * @param connection Database connection
      * @return Update successful or not
      */
+    
     @Override
     public boolean updateClientDiscount(String cif, BigDecimal discountPercentage, Connection connection) {
         try (PreparedStatement stmt = connection.prepareStatement("UPDATE clients_table c SET c.discount = ? where c.cif = ?")) {
