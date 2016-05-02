@@ -159,10 +159,13 @@ public class M03UF6201 {
         }
 //crear oracle sql.array
 
-        StructDescriptor structDescriptorPhones = StructDescriptor.createDescriptor(objectName, con);
-        oracle.sql.STRUCT phonesStruct = new oracle.sql.STRUCT(structDescriptorPhones, con, phones);
+
+        oracle.sql.ArrayDescriptor arrayDescriptor = oracle.sql.ArrayDescriptor.createDescriptor("PHONES_T", con);
+        oracle.sql.ARRAY phonesArray = new oracle.sql.ARRAY(arrayDescriptor, con, phones);
         StructDescriptor structDescriptor = StructDescriptor.createDescriptor(objectName, con);
-        Object[] attributes = new Object[]{cif, name, surname, street, town, postalcode, province, discount, phonesStruct};
+        
+        Object[] attributes = new Object[]{cif, name, surname, street, town, postalcode, province, discount, phonesArray};
+        
         oracle.sql.STRUCT object = new oracle.sql.STRUCT(structDescriptor, con, attributes);
 
         return object;

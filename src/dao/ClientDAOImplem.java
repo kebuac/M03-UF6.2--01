@@ -122,10 +122,13 @@ public class ClientDAOImplem implements ClientDAO {
         if (array == null) {
             System.out.println("No phones found for client " + cif + " Please add new phone below: ");
 
-            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "clients_table c SET c.phones=phones_nt(?) where c.cif=?")) {
+            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "clients_table c SET c.phones=phones_t(?) where c.cif=?")) {
+                
+                
+                
                 String number = stdin.readLine();
 
-                stmt.setObject(1, inputPhone(number, connection));
+              //  stmt.setString(1, inputPhone(number, connection));
                 stmt.setString(2, cif);
 
                 if (stmt.executeUpdate() != 1) {
