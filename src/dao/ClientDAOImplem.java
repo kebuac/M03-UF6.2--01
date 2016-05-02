@@ -160,9 +160,20 @@ public class ClientDAOImplem implements ClientDAO {
                 }
 
                 String input, inputOldNumber;
+                boolean compr = false;
+                do {
+                    System.out.println("What phone you want to modify?");
+                    inputOldNumber = stdin.readLine();
 
-                System.out.println("What phone you want to modify?");
-                inputOldNumber = stdin.readLine();
+                    for(int j = 0;j<array.length();j++){
+                    
+                    if(phones[j].equals(inputOldNumber)){
+                    
+                    compr = true;
+                    }
+                    }
+                    
+                } while (compr = false);
 
                 System.out.println("Insert new phone below: ");
                 input = stdin.readLine();
