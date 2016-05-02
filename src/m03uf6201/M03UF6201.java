@@ -21,7 +21,7 @@ public class M03UF6201 {
         oracle.sql.STRUCT client;
         ArrayList<oracle.sql.STRUCT> clients;
         Connection con = null;
-
+        
         try {
 
             ClientDAOFactory daofactory = new ClientDAOFactory();
@@ -29,7 +29,7 @@ public class M03UF6201 {
             ClientDAOImplem clientDaoImplem = daofactory.createClientDAO();
 
             con = DatabaseConnection.getInstance();
-
+            
             int opcion;
 
             do {
@@ -92,10 +92,10 @@ public class M03UF6201 {
                         break;
                     case 5:
                         System.out.println("Thank you. See you soon.");
-                        try {
+                        try{
                             con.close();
-                            scan.close();
-                        } catch (SQLException ex) {
+                            scan.close();   
+                        }catch(SQLException ex){
                             System.out.println("Database error: " + ex.getMessage());
                             System.out.println("Database state: " + ex.getSQLState());
                             System.out.println("Error code: " + ex.getErrorCode());
@@ -113,7 +113,7 @@ public class M03UF6201 {
             System.out.println("Error code: " + ex.getErrorCode());
         } finally {
             try {
-                scan.close();
+                scan.close();  
                 con.close();
             } catch (SQLException ex) {
                 System.out.println("Database error: " + ex.getMessage());
@@ -123,16 +123,16 @@ public class M03UF6201 {
         }
 
     }
-
-    /**
+/**
      * Method to add a new client by his information
      *
      * @param scan to scan input data
      * @param con to Connect with BBDD
      * @return client Object
      */
+    
     private static oracle.sql.STRUCT inputClient(Scanner scan, Connection con) throws IOException, SQLException {
-        String cif, name, surname, street, town, postalcode, province, compro;
+        String cif, name, surname, street, town, postalcode, province;
         BigDecimal discount;
         String[] phones = new String[3];
         String objectName = "CLIENT_T";
@@ -146,108 +146,50 @@ public class M03UF6201 {
         System.out.println("Type a new client's surname: ");
         surname = scan.next();
 
-        do {
-            System.out.println("Do you want to add street yes / no ");
-            compro = scan.next();
-        } while (compro != "yes" || compro != "no");
-        if (compro == "yes") {
-
-            System.out.println("Type a new client's street: ");
-            street = scan.next();
-
-        } else {
-            street = "";
-        }
-        compro = null;
-
-        do {
-
-            System.out.println("Do you want to add town yes / no ");
-            compro = scan.next();
-
-        } while (compro != "yes" || compro != "no");
-
-        if (compro == "yes") {
-            System.out.println("Type a new client's town: ");
-            town = scan.next();
-
-        } else {
-            town = "";
-        }
-        compro = null;
-        do {
-            System.out.println("Do you want to add postal code yes / no ");
-            compro = scan.next();
-        } while (compro != "yes" || compro != "no");
-
-        if (compro == "yes") {
-            System.out.println("Type a new client's postal code: ");
-            postalcode = scan.next();
-        } else {
-            postalcode = "";
-        }
-        compro = null;
-
-        do {
-            System.out.println("Do you want to add province yes / no ");
-            compro = scan.next();
-        } while (compro != "yes" || compro != "no");
-
-        if (compro == "yes") {
-            System.out.println("Type a new client's province: ");
-            province = scan.next();
-        } else {
-            province = "";
-        }
-        compro = null;
-        do {
-            System.out.println("Do you want to add discount yes / no ");
-            compro = scan.next();
-        } while (compro != "yes" || compro != "no");
-
-        if (compro == "yes") {
-            System.out.println("Type a new client's discount: ");
-            discount = scan.nextBigDecimal();
-        } else {
-            discount = null;
-        }
-        compro = null;
-
-        do {
-            System.out.println("Do you want to add phones yes / no ");
-            compro = scan.next();
-        } while (compro != "yes" || compro != "no");
-
-        if (compro == "yes") {
-            System.out.println("How many phones you want to enter? 1, 2 or 3");
-            int input = scan.nextInt();
-
-            int auxNums = input;
-
-            if (auxNums == 1 || auxNums == 2 || auxNums == 3) {
-
-                for (int i = 0; i < auxNums; i++) {
-                    System.out.println("Type a new client's phone: ");
-                    String aux = scan.next();
-
-                    phones[i] = aux;
-                }
-
-            } else {
-
-                phones[0] = null;
-
-            }
-        } else {
-            phones[0] = null;
-        }
+        System.out.println("Do you want to add street yes / no ");
+        name = scan.next();
         
+        System.out.println("Type a new client's street: ");
+        street = scan.next();
+
+        System.out.println("Type a new client's town: ");
+        town = scan.next();
+
+        System.out.println("Type a new client's postal code: ");
+        postalcode = scan.next();
+
+        System.out.println("Type a new client's province: ");
+        province = scan.next();
+
+        System.out.println("Type a new client's discount: ");
+        discount = scan.nextBigDecimal();
+
+        System.out.println("How many phones you want to enter? 1, 2 or 3");
+        int input = scan.nextInt();
+
+        int auxNums = input;
+
+        if (auxNums == 1 || auxNums == 2 || auxNums == 3) {
+
+            for (int i = 0; i < auxNums; i++) {
+                System.out.println("Type a new client's phone: ");
+                String aux = scan.next();
+
+                phones[i] = aux;
+            }
+
+        } else {
+
+            phones[0] = null;
+
+        }
+
         oracle.sql.ArrayDescriptor arrayDescriptor = oracle.sql.ArrayDescriptor.createDescriptor("PHONES_T", con);
         oracle.sql.ARRAY phonesArray = new oracle.sql.ARRAY(arrayDescriptor, con, phones);
         StructDescriptor structDescriptor = StructDescriptor.createDescriptor(objectName, con);
-
+        
         Object[] attributes = new Object[]{cif, name, surname, street, town, postalcode, province, discount, phonesArray};
-
+        
         oracle.sql.STRUCT object = new oracle.sql.STRUCT(structDescriptor, con, attributes);
 
         return object;
