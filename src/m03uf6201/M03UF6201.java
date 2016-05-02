@@ -15,7 +15,7 @@ import singleton.DatabaseConnection;
 public class M03UF6201 {
 
     private static Scanner scan = new Scanner(System.in);
-    
+
     public static void main(String[] args) {
 
         oracle.sql.STRUCT client;
@@ -33,35 +33,35 @@ public class M03UF6201 {
 
             do {
                 //MENU
-                System.out.println("1.- See all clients." + 
-                        "\n2.- Insert new clients." + 
-                        "\n3.- Update a client's phone." + 
-                        "\n4.- Update a client's discount." + 
-                        "\n5.- Exit.\n");
+                System.out.println("1.- See all clients."
+                        + "\n2.- Insert new clients."
+                        + "\n3.- Update a client's phone."
+                        + "\n4.- Update a client's discount."
+                        + "\n5.- Exit.\n");
                 String input = scan.next();
                 opcion = Integer.parseInt(input);
 
                 switch (opcion) {
                     case 1:
                         clients = clientDaoImplem.showAllClients(con);
-                        
-                        if(clients.size() > 0){
-                            for (STRUCT clientToShow : clients) {
-                            Object[] clientsValues = clientToShow.getAttributes();
-                            String cif = (String) clientsValues[0];
-                            String name = (String) clientsValues[1];
-                            String surname = (String) clientsValues[2];
-                            BigDecimal discount = (BigDecimal) clientsValues[7];
 
-                            System.out.println("Client: " + name +"\n"
-                                    + "CIF: " + cif + "\n"
-                                    + "Surname: " + surname + "\n"
-                                    + "Discount: " + discount + "\n");
+                        if (clients.size() > 0) {
+                            for (STRUCT clientToShow : clients) {
+                                Object[] clientsValues = clientToShow.getAttributes();
+                                String cif = (String) clientsValues[0];
+                                String name = (String) clientsValues[1];
+                                String surname = (String) clientsValues[2];
+                                BigDecimal discount = (BigDecimal) clientsValues[7];
+
+                                System.out.println("Client: " + name + "\n"
+                                        + "CIF: " + cif + "\n"
+                                        + "Surname: " + surname + "\n"
+                                        + "Discount: " + discount + "\n");
                             }
-                        }else{
+                        } else {
                             System.out.println("There is no clients on database!");
                         }
-                        
+
                         break;
                     case 2:
                         client = inputClient(scan, con);
@@ -76,22 +76,22 @@ public class M03UF6201 {
                     case 4:
                         System.out.println("Type a client's CIF: ");
                         String updateCif = scan.next();
-                        
+
                         System.out.println("Type a new discount to apply: ");
                         BigDecimal discount = scan.nextBigDecimal();
-                        
+
                         boolean update = clientDaoImplem.updateClientDiscount(updateCif, discount, con);
-                        
-                        if(update){
+
+                        if (update) {
                             System.out.println("New discount applied to client " + updateCif + " correctly!");
-                        }else{
+                        } else {
                             System.out.println("Error updating discount of client with CIF " + updateCif);
                         }
-                        
+
                         break;
                     case 5:
                         System.out.println("Thank you. See you soon.");
-                        
+
                         scan.close();
                         break;
                 }
@@ -116,25 +116,25 @@ public class M03UF6201 {
 
         System.out.println("Type a new client's CIF: ");
         cif = scan.next();
-        
+
         System.out.println("Type a new client's name: ");
         name = scan.next();
-        
+
         System.out.println("Type a new client's surname: ");
         surname = scan.next();
-        
+
         System.out.println("Type a new client's street: ");
         street = scan.next();
-        
+
         System.out.println("Type a new client's town: ");
         town = scan.next();
-        
+
         System.out.println("Type a new client's postal code: ");
         postalcode = scan.next();
-        
+
         System.out.println("Type a new client's province: ");
         province = scan.next();
-        
+
         System.out.println("Type a new client's discount: ");
         discount = scan.nextBigDecimal();
 
@@ -152,16 +152,19 @@ public class M03UF6201 {
                 phones[i] = aux;
             }
 
-        }else {
+        } else {
 
             phones[0] = null;
 
         }
+//crear oracle sql.array
 
+        StructDescriptor structDescriptorPhones = StructDescriptor.createDescriptor(objectName, con);
+        oracle.sql.STRUCT phonesStruct = new oracle.sql.STRUCT(structDescriptorPhones, con, phones);
         StructDescriptor structDescriptor = StructDescriptor.createDescriptor(objectName, con);
-        Object[] attributes = new Object[]{cif, name, surname, street, town, postalcode, province, discount, phones};
+        Object[] attributes = new Object[]{cif, name, surname, street, town, postalcode, province, discount, phonesStruct};
         oracle.sql.STRUCT object = new oracle.sql.STRUCT(structDescriptor, con, attributes);
-        
+
         return object;
     }
     /*

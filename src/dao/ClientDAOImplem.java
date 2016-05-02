@@ -122,7 +122,7 @@ public class ClientDAOImplem implements ClientDAO {
         if (array == null) {
             System.out.println("No phones found for client " + cif + " Please add new phone below: ");
 
-            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "clientes_table c SET c.phones=phones_nt(?) where c.cif=?")) {
+            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "clients_table c SET c.phones=phones_nt(?) where c.cif=?")) {
                 String number = stdin.readLine();
 
                 stmt.setObject(1, inputPhone(number, connection));
@@ -143,7 +143,7 @@ public class ClientDAOImplem implements ClientDAO {
             }
         } else {
 
-            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "TABLE(SELECT PHONES FROM CLIENES_TABLE WHERE CIF=?) p SET VALUE(p) = ? WHERE p.phone_number= ?")) {
+            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "TABLE(SELECT PHONES FROM CLIENTS_TABLE WHERE CIF=?) p SET VALUE(p) = ? WHERE p.phone_number= ?")) {
                 int i;
                 System.out.println("Client " + cif + " phone numbers");
                 Object[] phones = (Object[]) array.getArray();
@@ -160,10 +160,10 @@ public class ClientDAOImplem implements ClientDAO {
                 String input;
                 
                 do{
-                System.out.println("Que telefono quieres modificar?");
+                System.out.println("What phone you want to modify?");
                 input = stdin.readLine();
                 opcion = Integer.parseInt(input);
-                System.out.println("Introducte el nuevo telefono: ");
+                System.out.println("Insert new phone below: ");
                 input = stdin.readLine();
                 
                 }
