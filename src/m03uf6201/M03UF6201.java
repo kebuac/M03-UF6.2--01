@@ -53,7 +53,7 @@ public class M03UF6201 {
                                 String surname = (String) clientsValues[2];
                                 BigDecimal discount = (BigDecimal) clientsValues[7];
 
-                                System.out.println("Client: " + name + "\n"
+                                System.out.println("Client " + name + "\n"
                                         + "CIF: " + cif + "\n"
                                         + "Surname: " + surname + "\n"
                                         + "Discount: " + discount + "\n");
@@ -83,7 +83,7 @@ public class M03UF6201 {
                         boolean update = clientDaoImplem.updateClientDiscount(updateCif, discount, con);
 
                         if (update) {
-                            System.out.println("New discount applied to client " + updateCif + " correctly!");
+                            System.out.println("New discount applied to client " + updateCif + " correctly!\n");
                         } else {
                             System.out.println("Error updating discount of client with CIF " + updateCif);
                         }
