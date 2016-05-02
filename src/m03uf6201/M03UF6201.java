@@ -71,7 +71,7 @@ public class M03UF6201 {
                         System.out.println("Type a client's CIF: ");
                         String cif = scan.next();
 
-                        clientDaoImplem.updateClientPhone(input, con);
+                        clientDaoImplem.updateClientPhone(cif, con);
                         break;
                     case 4:
                         System.out.println("Type a client's CIF: ");
