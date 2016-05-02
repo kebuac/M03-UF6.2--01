@@ -132,7 +132,7 @@ public class ClientDAOImplem implements ClientDAO {
                 stmt.setString(2, cif);
 
                 if (stmt.executeUpdate() != 1) {
-                    System.out.println("Error adding new phone to client " + cif);
+                    System.out.println("Error updateing new phone of client with CIF" + cif);
                 } else {
                     System.out.println("ACTION COMPLETED SUCCESFULLY");
                 }
@@ -142,8 +142,7 @@ public class ClientDAOImplem implements ClientDAO {
                 System.out.println("Error code: " + es.getErrorCode());
 
             } catch (IOException ex) {
-
-                System.out.println("Error writing new phone");
+                System.out.println("I/O error: " +ex.getMessage());
             }
         } else {
 
@@ -153,34 +152,30 @@ public class ClientDAOImplem implements ClientDAO {
                 Object[] phones = (Object[]) array.getArray();
 
                 for (i = 0; i < array.length(); i++) {
-
                     System.out.println("Phone " + i + " number: " + phones[i]);
-
                 }
 
                 String input, inputOldNumber;
-                boolean compr = false;
+                boolean check = false;
+                
                 do {
                     System.out.println("What phone you want to modify?");
                     inputOldNumber = stdin.readLine();
 
-                    for(int j = 0;j<array.length();j++){
-                    
-                    if(phones[j].equals(inputOldNumber)){
-                    
-                    compr = true;
+                    for(int j = 0;j < array.length();j++){
+                        if(phones[j].equals(inputOldNumber)){
+                            check = true;
+                            break;
+                        }
                     }
-                    }
                     
-                } while (compr = false);
+                } while (check = false);
 
                 System.out.println("Insert new phone below: ");
                 input = stdin.readLine();
 
                 stmt.setString(1, cif);
-
                 stmt.setObject(2, input);
-
                 stmt.setString(3, inputOldNumber);
 
                 if (stmt.executeUpdate() != 1) {
@@ -194,7 +189,7 @@ public class ClientDAOImplem implements ClientDAO {
                 System.out.println("Database state: " + es.getSQLState());
                 System.out.println("Error code: " + es.getErrorCode());
             } catch (IOException ex) {
-                System.out.println("Error writing new phone");
+                System.out.println("I/O error: " +ex.getMessage());
             }
         }
 
@@ -212,14 +207,11 @@ public class ClientDAOImplem implements ClientDAO {
     @Override
     public boolean updateClientDiscount(String cif, BigDecimal discountPercentage, Connection connection) {
         try (PreparedStatement stmt = connection.prepareStatement("UPDATE clients_table c SET c.discount = ? where c.cif = ?")) {
-
             stmt.setBigDecimal(1, discountPercentage);
-
             stmt.setString(2, cif);
 
             if (stmt.executeUpdate() != 1) {
                 return false;
-
             } else {
                 return true;
             }
