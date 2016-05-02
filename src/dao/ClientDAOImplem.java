@@ -93,7 +93,7 @@ public class ClientDAOImplem implements ClientDAO {
             
             
             stmt.setString(1, cif);
-            ResultSet rs = stmt.executeQuery(query);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
 
@@ -155,11 +155,11 @@ public class ClientDAOImplem implements ClientDAO {
                 Object[] phones = (Object[]) array.getArray();
                
                 for (i = 0; i < array.length(); i++) {
-                    oracle.sql.STRUCT struct = (oracle.sql.STRUCT) phones[i];
-                    Object[] structAttributes = struct.getAttributes();
-                    if (structAttributes != null) {
-                        System.out.println("Phone " + i + " number: " + structAttributes[0]);
-                    }
+                     
+                
+                 
+                        System.out.println("Phone " + i + " number: " + phones[i]);
+                    
                 }
                 
                
