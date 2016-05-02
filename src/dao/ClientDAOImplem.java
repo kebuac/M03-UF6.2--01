@@ -74,7 +74,7 @@ public class ClientDAOImplem implements ClientDAO {
             System.out.println("Error code: " + ex.getErrorCode());
         }
 
-        System.out.println("Client " + client + "was inserted correctly!");
+        System.out.println("Client was inserted correctly!");
         return true;
     }
 
@@ -120,9 +120,9 @@ public class ClientDAOImplem implements ClientDAO {
         BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 
         if (array == null) {
-            System.out.println("No phones found for client " + cif + " Please add new phone below: ");
+            System.out.println("No phones found for client " + cif + ". Please add new phone below: ");
 
-            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "clients_table c SET c.phones=phones_t(?) where c.cif=?")) {
+            try (PreparedStatement stmt = connection.prepareStatement("UPDATE clients_table c SET c.phones=phones_t(?) WHERE c.cif=?")) {
                 
                 
                 
@@ -159,24 +159,25 @@ public class ClientDAOImplem implements ClientDAO {
                     }
                 }
                 
-                int opcion;
-                String input;
+               
+                String input,inputOldNumber;
                 
-                do{
+                
                 System.out.println("What phone you want to modify?");
-                input = stdin.readLine();
-                opcion = Integer.parseInt(input);
+                inputOldNumber = stdin.readLine();
+                
+                
                 System.out.println("Insert new phone below: ");
                 input = stdin.readLine();
                 
-                }
-                while(opcion!=1||opcion!=2||opcion!=3);
+                
+                
            
                 stmt.setString(1, cif);
     
-                //stmt.setObject(2, structnew);
+                stmt.setObject(2, input);
                 
-                //stmt.setString(3, phoneold);
+                stmt.setString(3, inputOldNumber);
               
                 if (stmt.executeUpdate() != 1) {
                     System.out.println("Error UPDATING new phone to client " + cif);
