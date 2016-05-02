@@ -146,7 +146,7 @@ public class ClientDAOImplem implements ClientDAO {
             }
         } else {
 
-            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "TABLE(SELECT PHONES FROM CLIENTS_TABLE WHERE CIF=?) p SET VALUE(p) = ? WHERE p.phone_number= ?")) {
+            try (PreparedStatement stmt = connection.prepareStatement("UPDATE" + "TABLE(SELECT PHONES FROM CLIENTS_TABLE WHERE CIF=?) p SET VALUE(p) = ? WHERE p.phone_number = phones_t(?)")) {
                 int i;
                 System.out.println("Client " + cif + " phone numbers");
                 Object[] phones = (Object[]) array.getArray();
@@ -171,18 +171,12 @@ public class ClientDAOImplem implements ClientDAO {
                 
                 }
                 while(opcion!=1||opcion!=2||opcion!=3);
-                
-                oracle.sql.STRUCT structnew = inputPhone(input,connection);
-                oracle.sql.STRUCT structold = (oracle.sql.STRUCT) phones[opcion];
-                Object[] structAttributes = structold.getAttributes();
-                String phoneold = (String) structAttributes[0];
-                    
-               
+           
                 stmt.setString(1, cif);
     
-                stmt.setObject(2, structnew);
+                //stmt.setObject(2, structnew);
                 
-                stmt.setString(3, phoneold);
+                //stmt.setString(3, phoneold);
               
                 if (stmt.executeUpdate() != 1) {
                     System.out.println("Error UPDATING new phone to client " + cif);
