@@ -59,7 +59,7 @@ public class M03UF6201 {
                                         + "Discount: " + discount + "\n");
                             }
                         } else {
-                            System.out.println("There is no clients on database!");
+                            System.out.println("There is no clients on database!\n");
                         }
 
                         break;
@@ -112,7 +112,7 @@ public class M03UF6201 {
         String cif, name, surname, street, town, postalcode, province;
         BigDecimal discount;
         String[] phones = new String[3];
-        String objectName = "CLIENTS_TABLE";
+        String objectName = "CLIENT_T";
 
         System.out.println("Type a new client's CIF: ");
         cif = scan.next();
@@ -157,8 +157,6 @@ public class M03UF6201 {
             phones[0] = null;
 
         }
-//crear oracle sql.array
-
 
         oracle.sql.ArrayDescriptor arrayDescriptor = oracle.sql.ArrayDescriptor.createDescriptor("PHONES_T", con);
         oracle.sql.ARRAY phonesArray = new oracle.sql.ARRAY(arrayDescriptor, con, phones);
